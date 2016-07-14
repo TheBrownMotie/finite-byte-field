@@ -59,6 +59,16 @@ public class FiniteByteField
 	}
 	
 	/**
+	 * This is a version of {@link #mul(byte, byte)} optimized for multiplying by two.
+	 * @param a The byte value to double.
+	 * @return The given byte valued, multiplied by two.
+	 */
+	public static byte dbl(byte a)
+	{
+		return (byte) ((a << 1) ^ ((a & 0x80) != 0 ? 0x1b : 0));
+	}
+	
+	/**
 	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
 	 * logarithms: <code>
 	 * product = ilog( log(multiplier) + log(multiplicand) )
@@ -155,8 +165,6 @@ public class FiniteByteField
 	{
 		if(vector1.length != vector2.length)
 			throw new IllegalArgumentException("Byte vector lengths must be equal");
-		if(vector1.length > FiniteByteField.MAX_VALUE || vector2.length > FiniteByteField.MAX_VALUE)
-			throw new IllegalArgumentException("Byte vector lengths must not be greater than finite field bounds");
 		
 		int length = vector1.length;
 		byte product = 0;

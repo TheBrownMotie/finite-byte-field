@@ -11,6 +11,19 @@ public class FiniteByteFieldTest
 	private static final byte snd = -122;
 	
 	@Test
+	public void testMaxValue()
+	{
+		assertEquals((int)Math.pow(2, 8) - 1, FiniteByteField.MAX_VALUE);
+	}
+	
+	@Test
+	public void testDbl()
+	{
+		assertEquals(-12, dbl(fst));
+		assertEquals(23, dbl(snd));
+	}
+	
+	@Test
 	public void testMul()
 	{
 		byte product = mul(fst, snd);
