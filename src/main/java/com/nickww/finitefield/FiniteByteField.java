@@ -37,10 +37,8 @@ public class FiniteByteField
 	 * with the Galois field)
 	 * {@link https://en.wikipedia.org/wiki/Ancient_Egyptian_multiplication#Russian_peasant_multiplication}.
 	 * 
-	 * @param a
-	 *            The multiplier
-	 * @param b
-	 *            The multiplicand
+	 * @param a The multiplier
+	 * @param b The multiplicand
 	 * @return The GF(2<sup>8</sup>) product
 	 */
 	private static byte slowMul(byte a, byte b)
@@ -66,10 +64,8 @@ public class FiniteByteField
 	 * product = ilog( log(multiplier) + log(multiplicand) )
 	 * </code>
 	 * 
-	 * @param a
-	 *            The multiplier
-	 * @param b
-	 *            The multiplicand
+	 * @param a The multiplier
+	 * @param b The multiplicand
 	 * @return The GF(2<sup>8</sup>) product
 	 */
 	public static byte mul(byte a, byte b)
@@ -88,10 +84,8 @@ public class FiniteByteField
 	 * product = ilog( log(dividend) - log(divisor) )
 	 * </code>
 	 * 
-	 * @param a
-	 *            The dividend
-	 * @param b
-	 *            The divisor
+	 * @param a The dividend
+	 * @param b The divisor
 	 * @return The GF(2<sup>8</sup>) quotient
 	 */
 	public static byte div(byte a, byte b)
@@ -107,10 +101,8 @@ public class FiniteByteField
 	/**
 	 * This adds two bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR.
 	 * 
-	 * @param a
-	 *            The augend
-	 * @param b
-	 *            The addend
+	 * @param a The augend
+	 * @param b The addend
 	 * @return The GF(2<sup>8</sup>) sum
 	 */
 	public static byte add(byte a, byte... bytes)
@@ -125,10 +117,8 @@ public class FiniteByteField
 	 * This subtracts two bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR. Note that this is the
 	 * same as addition.
 	 * 
-	 * @param a
-	 *            The minuend
-	 * @param b
-	 *            The subtrahend
+	 * @param a The minuend
+	 * @param b The subtrahend
 	 * @return The GF(2<sup>8</sup>) difference
 	 */
 	public static byte sub(byte a, byte... bytes)
@@ -139,10 +129,8 @@ public class FiniteByteField
 	/**
 	 * This repeatedly multiplies the two bytes to arrive at the power.
 	 * 
-	 * @param i
-	 *            The base
-	 * @param e
-	 *            The exponent
+	 * @param i The base
+	 * @param e The exponent
 	 * @return The GF(2<sup>8</sup>) power
 	 */
 	public static byte pow(byte i, byte e)
@@ -158,13 +146,10 @@ public class FiniteByteField
 	/**
 	 * Calculates the dot product of the two given byte arrays.
 	 * 
-	 * @param vector1
-	 *            The first byte array
-	 * @param vector2
-	 *            The second byte array
+	 * @param vector1 The first byte array
+	 * @param vector2 The second byte array
 	 * @return The dot product, arrived at with addition and multiplication in GF(2<sup>8</sup>)
-	 * @throws IllegalArgumentExecption
-	 *             if the vectors are not the same length
+	 * @throws IllegalArgumentExecption if the vectors are not the same length
 	 */
 	public static byte dot(byte[] vector1, byte[] vector2)
 	{
