@@ -115,4 +115,20 @@ public class FiniteByteFieldTest
 	{
 		dot(new byte[]{1}, new byte[]{1, 2});
 	}
+	
+	@Test
+	public void testSqrt()
+	{
+		byte fstSquare = mul(fst, fst);
+		byte sndSquare = mul(snd, snd);
+		assertEquals(fst, sqrt(fstSquare));
+		assertEquals(snd, sqrt(sndSquare));
+	}
+	
+	@Test
+	public void testSqr()
+	{
+		assertEquals(mul(fst, fst), sqr(fst));
+		assertEquals(mul(snd, snd), sqr(snd));
+	}
 }

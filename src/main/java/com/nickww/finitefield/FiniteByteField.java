@@ -14,6 +14,8 @@ public class FiniteByteField
 	
 	private static final byte[] exp = new byte[MAX_VALUE + 1];
 	private static final byte[] log = new byte[MAX_VALUE + 1];
+	private static final byte[] sqr = new byte[MAX_VALUE + 1];
+	private static final byte[] sqrt = new byte[MAX_VALUE + 1];
 	
 	static
 	{
@@ -21,15 +23,54 @@ public class FiniteByteField
 		exp[0] = x;
 		
 		final byte generator = 0x03;
-		for(int i = 1; i < 255; i++)
+		for(int i = 1; i <= MAX_VALUE; i++)
 		{
 			byte y = slowMul(x, generator);
 			exp[i] = y;
 			x = y;
 		}
 		
-		for(int i = 0; i < 255; i++)
+		for(int i = 0; i <= MAX_VALUE; i++)
 			log[exp[i] & 0xff] = (byte) i;
+		
+		// #mul should now work
+		for(int i = 0; i <= MAX_VALUE; i++)
+			sqr[i] = mul((byte)(i & 0xff), (byte)(i & 0xff));
+		for(int i = 0; i <= MAX_VALUE; i++)
+			sqrt[sqr[i] & 0xff] = (byte) i;
+	}
+	
+	/**
+	 * Returns the given number raised to the power of 2.
+	 * 
+	 * @see #pow(byte, byte)
+	 * @param a The base
+	 * @return The GF(2<sup>8</sup>) square of the given number;
+	 */
+	public static byte sqr(byte a)
+	{
+		return sqr[a & 0xff];
+	}
+	
+	/**
+	 * Returns the square root of the given number. This is calculated as the inverse of {@link #sqr(byte)}, but could also
+	 * have been calculated as:<pre>
+	 * <code>
+	 * In GF(2<sup>m</sup>),
+	 * a = a<sup>2<sup>m</sup></sup>
+	 * Therefore,
+	 * a<sup>1/2</sup> = a<sup>2<sup>m</sup>/2</sup>
+	 * a<sup>1/2</sup> = a<sup>2<sup>m-1</sup></sup>
+	 * In GF(2<sup>8</sup>),
+	 * sqrt(a) = a<sup>128
+	 * </code></pre>
+	 * 
+	 * @param a The base
+	 * @return The GF(2<sup>8</sup>) square root of the given number;
+	 */
+	public static byte sqrt(byte a)
+	{
+		return sqrt[a & 0xff];
 	}
 	
 	/**
