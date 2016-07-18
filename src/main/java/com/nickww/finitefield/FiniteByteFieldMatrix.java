@@ -35,10 +35,11 @@ public final class FiniteByteFieldMatrix
 	 * constructing this object without altering the object.
 	 * 
 	 * @param data The byte data of this matrix.
+	 * @throws NullPointerException if the given array is null.
+	 * @throws IllegalArgumentException if the matrix has no rows, no columns, or the rows are not all the same length.
 	 */
 	public FiniteByteFieldMatrix(byte[][] data)
 	{
-		this.data = data;
 		if(data.length == 0 || data[0].length == 0)
 			throw new IllegalArgumentException("Both dimensions of matrix must be non-zero");
 		
@@ -46,6 +47,8 @@ public final class FiniteByteFieldMatrix
 		for(int i = 1; i < data.length; i++)
 			if(data[i].length != cols)
 				throw new IllegalArgumentException("All rows in array must be the same length");
+		
+		this.data = copy(data);
 	}
 	
 	/**
@@ -245,6 +248,7 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * Returns the number of rows in this matrix.
+	 * 
 	 * @return The number of rows in this matrix.
 	 */
 	public int numRows()
@@ -254,8 +258,9 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * Returns the number of columns in this matrix.
+	 * 
 	 * @return The number of columns in this matrix.
-	 */ 
+	 */
 	public int numCols()
 	{
 		return data[0].length;
@@ -263,6 +268,7 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * Returns whether or not this matrix has the same number of rows as columns.
+	 * 
 	 * @return True if the matrix is square, false otherwise.
 	 */
 	public boolean isSquare()
@@ -282,7 +288,7 @@ public final class FiniteByteFieldMatrix
 		FiniteByteFieldMatrix that = (FiniteByteFieldMatrix) o;
 		return Arrays.deepEquals(this.data, that.data);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -291,7 +297,7 @@ public final class FiniteByteFieldMatrix
 	{
 		return Arrays.deepHashCode(this.data);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -302,5 +308,19 @@ public final class FiniteByteFieldMatrix
 		for(int i = 0; i < this.data.length; i++)
 			string.append(Arrays.toString(this.data[i])).append("\n");
 		return string.toString();
+	}
+	
+	/**
+	 * Creates a copy of the given array. Precondition: the given array is not null or empty, and each column is the
+	 * same size and not empty. Postcondition: the given array is unaltered, and the returned array is a completely
+	 * unattached copy.
+	 */
+	private byte[][] copy(byte[][] data)
+	{
+		byte[][] copy = new byte[data.length][data[0].length];
+		for(int row = 0; row < data.length; row++)
+			for(int col = 0; col < data[0].length; col++)
+				copy[row][col] = data[row][col];
+		return copy;
 	}
 }
