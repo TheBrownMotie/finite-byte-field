@@ -29,6 +29,8 @@ public final class FiniteByteFieldMatrix
 	}
 	
 	private final byte[][] data;
+	private final int rows;
+	private final int cols;
 	
 	/**
 	 * Creates a new matrix with the given byte data. This class is immutable - the array can be safely altered after
@@ -43,11 +45,12 @@ public final class FiniteByteFieldMatrix
 		if(data.length == 0 || data[0].length == 0)
 			throw new IllegalArgumentException("Both dimensions of matrix must be non-zero");
 		
-		int cols = data[0].length;
-		for(int i = 1; i < data.length; i++)
+		rows = data.length;
+		cols = data[0].length;
+		for(int i = 1; i < rows; i++)
 			if(data[i].length != cols)
 				throw new IllegalArgumentException("All rows in array must be the same length");
-		
+			
 		this.data = copy(data);
 	}
 	
@@ -59,15 +62,14 @@ public final class FiniteByteFieldMatrix
 	 * @param deletedRow The row of this matrix to exclude in the returned matrix.
 	 * @param deletedCol The column of this matrix to exclude in the returned matrix.
 	 * @return The sub-matrix of this matrix without the given row and column.
+	 * @throws IndexOutOfBoundsException if the given row or column is out of bounds for this matrix.
 	 */
 	public FiniteByteFieldMatrix minor(int deletedRow, int deletedCol)
 	{
 		if(deletedRow >= numRows() || deletedRow < 0)
-			throw new IndexOutOfBoundsException(
-					"Row index " + deletedRow + " out of bounds for matrix with " + numRows() + " rows");
+			throw new IndexOutOfBoundsException("Row index out of bounds: " + deletedRow + " " + numRows());
 		if(deletedCol >= numCols() || deletedCol < 0)
-			throw new IndexOutOfBoundsException(
-					"Column index " + deletedCol + " out of bounds for matrix with " + numCols() + " cols");
+			throw new IndexOutOfBoundsException("Column index out of bounds: " + deletedCol + " " + numCols());
 		
 		byte[][] minor = new byte[numRows() - 1][numCols() - 1];
 		
@@ -106,7 +108,7 @@ public final class FiniteByteFieldMatrix
 		if(!isSquare())
 			throw new IllegalStateException("Only a square matrix has a determinant");
 		
-		int size = numRows(); // must be same as numCols()
+		int size = numRows();
 		if(size == 1)
 			return data[0][0];
 		
@@ -253,7 +255,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public int numRows()
 	{
-		return data.length;
+		return rows;
 	}
 	
 	/**
@@ -263,7 +265,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public int numCols()
 	{
-		return data[0].length;
+		return cols;
 	}
 	
 	/**

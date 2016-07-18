@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 public class FiniteByteFieldMatrixTest
 {
@@ -163,6 +164,6 @@ public class FiniteByteFieldMatrixTest
 	@Test
 	public void testHashCodeEquals()
 	{
-		EqualsVerifier.forClass(FiniteByteFieldMatrix.class).verify();
+		EqualsVerifier.forClass(FiniteByteFieldMatrix.class).suppress(Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
 	}
 }
