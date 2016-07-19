@@ -57,6 +57,11 @@ public final class FiniteByteFieldMatrix
 	private final int rows;
 	private final int cols;
 	
+	private volatile FiniteByteFieldMatrix transpose;
+	private volatile FiniteByteFieldMatrix cofactor;
+	private volatile FiniteByteFieldMatrix inverse;
+	private volatile Byte determinant;
+	
 	/**
 	 * Creates a new matrix with the given byte data. This class is immutable - the array can be safely altered after
 	 * constructing this object without altering the object.
@@ -75,7 +80,7 @@ public final class FiniteByteFieldMatrix
 		for(int i = 1; i < rows; i++)
 			if(data[i].length != cols)
 				throw new IllegalArgumentException("All rows in array must be the same length");
-			
+		
 		this.data = copy(data);
 	}
 	
@@ -130,18 +135,9 @@ public final class FiniteByteFieldMatrix
 	 */
 	public byte determinant()
 	{
-		if(!isSquare())
-			throw new IllegalStateException("Only a square matrix has a determinant");
-		
-		int size = numRows();
-		if(size == 1)
-			return data[0][0];
-		
-		byte sum = 0;
-		byte[] firstRow = data[0];
-		for(int col = 0; col < size; col++)
-			sum = add(sum, mul(firstRow[col], minor(0, col).determinant()));
-		return sum;
+		if(determinant == null)
+			this.determinant = calculateDeterminant();
+		return determinant;
 	}
 	
 	/**
@@ -152,7 +148,9 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix transpose()
 	{
-		return FiniteByteFieldMatrix.build(numCols(), numRows(), (r, c) -> data[c][r]);
+		if(transpose == null)
+			transpose = FiniteByteFieldMatrix.build(numCols(), numRows(), (r, c) -> data[c][r]);
+		return transpose;
 	}
 	
 	/**
@@ -163,7 +161,9 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix cofactor()
 	{
-		return FiniteByteFieldMatrix.build(numRows(), numCols(), (r, c) -> minor(r, c).determinant());
+		if(cofactor == null)
+			cofactor = FiniteByteFieldMatrix.build(numRows(), numCols(), (r, c) -> minor(r, c).determinant());
+		return cofactor;
 	}
 	
 	/**
@@ -227,13 +227,18 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * Creates a new matrix which is the inverse of this matrix. A matrix is a true inverse if, when multiplied with the
-	 * original matrix, produces an identity matrix.
+	 * original matrix, produces an identity matrix. Only a square matrix has a true inverse.
 	 * 
 	 * @return The inverse of this matrix.
+	 * @throws IllegalStateException if this matrix is not a square matrix.
 	 */
 	public FiniteByteFieldMatrix inverse()
 	{
-		return transpose().cofactor().divideBy(determinant());
+		if(!isSquare())
+			throw new IllegalStateException("Only a square matrix has an inverse");
+		if(inverse == null)
+			inverse = transpose().cofactor().divideBy(determinant());
+		return inverse;
 	}
 	
 	/**
@@ -317,9 +322,9 @@ public final class FiniteByteFieldMatrix
 	}
 	
 	/**
-	 * Creates a copy of the given array. Precondition: the given array is not null or empty, and each column is the
-	 * same size and not empty. Postcondition: the given array is unaltered, and the returned array is a completely
-	 * unattached copy.
+	 * Creates a copy of the given array.<br/>
+	 * Precondition: the given array is not null or empty, and each column is the same size and not empty.<br/>
+	 * Postcondition: the given array is unaltered, and the returned array is a completely unattached copy.
 	 */
 	private byte[][] copy(byte[][] data)
 	{
@@ -328,5 +333,21 @@ public final class FiniteByteFieldMatrix
 			for(int col = 0; col < data[0].length; col++)
 				copy[row][col] = data[row][col];
 		return copy;
+	}
+	
+	private byte calculateDeterminant()
+	{
+		if(!isSquare())
+			throw new IllegalStateException("Only a square matrix has a determinant");
+		
+		int size = numRows();
+		if(size == 1)
+			return data[0][0];
+		
+		byte sum = 0;
+		byte[] firstRow = data[0];
+		for(int col = 0; col < size; col++)
+			sum = add(sum, mul(firstRow[col], minor(0, col).determinant()));
+		return sum;
 	}
 }

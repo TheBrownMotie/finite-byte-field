@@ -163,7 +163,11 @@ public class FiniteByteFieldMatrixTest
 	@Test
 	public void testHashCodeEquals()
 	{
-		EqualsVerifier.forClass(FiniteByteFieldMatrix.class).suppress(Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+		EqualsVerifier
+			.forClass(FiniteByteFieldMatrix.class)
+			.suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
+			.withPrefabValues(FiniteByteFieldMatrix.class, FiniteByteFieldMatrix.identity(1), FiniteByteFieldMatrix.identity(2))
+			.verify();
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
