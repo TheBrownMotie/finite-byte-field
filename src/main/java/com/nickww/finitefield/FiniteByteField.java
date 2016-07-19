@@ -74,32 +74,6 @@ public class FiniteByteField
 	}
 	
 	/**
-	 * This multiplies the two bytes, as if they were unsigned, using the Russian peasant technique (modified to work
-	 * with the Galois field)
-	 * {@link https://en.wikipedia.org/wiki/Ancient_Egyptian_multiplication#Russian_peasant_multiplication}.
-	 * 
-	 * @param a The multiplier
-	 * @param b The multiplicand
-	 * @return The GF(2<sup>8</sup>) product
-	 */
-	private static byte slowMul(byte a, byte b)
-	{
-		byte r = 0;
-		byte t;
-		while(a != 0)
-		{
-			if((a & 1) != 0) // if a is odd
-				r = (byte) (r ^ b); // add value of b to the result
-			t = (byte) (b & 0x80);
-			b = (byte) (b << 1); // double b
-			if(t != 0)
-				b = (byte) (b ^ 0x1b); // add polynomial representation to b
-			a = (byte) ((a & 0xff) >> 1); // divide a in half ( "& 0xff >>" equivalent to ">>>" for unsigned byte)
-		}
-		return r;
-	}
-	
-	/**
 	 * This is a version of {@link #mul(byte, byte)} optimized for multiplying by two.
 	 * @param a The byte value to double.
 	 * @return The given byte valued, multiplied by two.
@@ -212,5 +186,31 @@ public class FiniteByteField
 		for(int i = 0; i < length; i++)
 			product = add(product, mul(vector1[i], vector2[i]));
 		return product;
+	}
+	
+	/**
+	 * This multiplies the two bytes, as if they were unsigned, using the Russian peasant technique (modified to work
+	 * with the Galois field)
+	 * {@link https://en.wikipedia.org/wiki/Ancient_Egyptian_multiplication#Russian_peasant_multiplication}.
+	 * 
+	 * @param a The multiplier
+	 * @param b The multiplicand
+	 * @return The GF(2<sup>8</sup>) product
+	 */
+	private static byte slowMul(byte a, byte b)
+	{
+		byte r = 0;
+		byte t;
+		while(a != 0)
+		{
+			if((a & 1) != 0) // if a is odd
+				r = (byte) (r ^ b); // add value of b to the result
+			t = (byte) (b & 0x80);
+			b = (byte) (b << 1); // double b
+			if(t != 0)
+				b = (byte) (b ^ 0x1b); // add polynomial representation to b
+			a = (byte) ((a & 0xff) >> 1); // divide a in half ( "& 0xff >>" equivalent to ">>>" for unsigned byte)
+		}
+		return r;
 	}
 }
