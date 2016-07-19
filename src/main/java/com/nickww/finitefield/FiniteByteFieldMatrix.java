@@ -110,13 +110,8 @@ public final class FiniteByteFieldMatrix
 			if(row != deletedRow)
 			{
 				for(int col = 0; col < numCols(); col++)
-				{
 					if(col != deletedCol)
-					{
-						minor[minorRow][minorCol] = data[row][col];
-						minorCol++;
-					}
-				}
+						minor[minorRow][minorCol++] = data[row][col];
 				minorRow++;
 			}
 			minorCol = 0;
