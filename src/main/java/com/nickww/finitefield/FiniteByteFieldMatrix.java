@@ -152,11 +152,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix transpose()
 	{
-		byte[][] transpose = new byte[numCols()][numRows()];
-		for(int row = 0; row < numRows(); row++)
-			for(int col = 0; col < numCols(); col++)
-				transpose[col][row] = data[row][col];
-		return new FiniteByteFieldMatrix(transpose);
+		return FiniteByteFieldMatrix.build(numCols(), numRows(), (r, c) -> data[c][r]);
 	}
 	
 	/**
@@ -167,12 +163,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix cofactor()
 	{
-		byte[][] cofactor = new byte[numRows()][numCols()];
-		for(int i = 0; i < numRows(); i++)
-			for(int j = 0; j < numCols(); j++)
-				cofactor[i][j] = this.minor(i, j).determinant();
-			
-		return new FiniteByteFieldMatrix(cofactor);
+		return FiniteByteFieldMatrix.build(numRows(), numCols(), (r, c) -> minor(r, c).determinant());
 	}
 	
 	/**
@@ -184,11 +175,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix times(final byte constant)
 	{
-		byte[][] newData = new byte[numRows()][numCols()];
-		for(int row = 0; row < numRows(); row++)
-			for(int col = 0; col < numCols(); col++)
-				newData[row][col] = mul(data[row][col], constant);
-		return new FiniteByteFieldMatrix(newData);
+		return FiniteByteFieldMatrix.build(numRows(), numCols(), (r, c) -> mul(data[r][c], constant));
 	}
 	
 	/**
@@ -223,11 +210,7 @@ public final class FiniteByteFieldMatrix
 		if(cols.length != matrix.data.length)
 			throw new IllegalArgumentException("Matrix dimensions must match to be multiplied");
 		
-		byte[][] product = new byte[this.data.length][thatCols.length];
-		for(int row = 0; row < this.data.length; row++)
-			for(int col = 0; col < thatCols.length; col++)
-				product[row][col] = dot(this.data[row], thatCols[col]);
-		return new FiniteByteFieldMatrix(product);
+		return FiniteByteFieldMatrix.build(numRows(), matrix.numCols(), (r, c) -> dot(this.data[r], thatCols[c]));
 	}
 	
 	/**
@@ -239,11 +222,7 @@ public final class FiniteByteFieldMatrix
 	 */
 	public FiniteByteFieldMatrix divideBy(final byte constant)
 	{
-		byte[][] newData = new byte[numRows()][numCols()];
-		for(int row = 0; row < numRows(); row++)
-			for(int col = 0; col < numCols(); col++)
-				newData[row][col] = div(data[row][col], constant);
-		return new FiniteByteFieldMatrix(newData);
+		return FiniteByteFieldMatrix.build(numRows(), numCols(), (r, c) -> div(data[r][c], constant));
 	}
 	
 	/**
