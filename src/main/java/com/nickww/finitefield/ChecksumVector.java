@@ -1,5 +1,8 @@
 package com.nickww.finitefield;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class ChecksumVector
 {
 	/**
@@ -22,4 +25,22 @@ public abstract class ChecksumVector
 	 * original data, or if the array is not large enough to be valid.
 	 */
 	public abstract byte[] solveMissingValues(Byte[] dataWithChecksums);
+	
+	/**
+	 * Returns a list of the indices of the given array whose values are null. If the given array is null, null is
+	 * returned.
+	 * 
+	 * @param array The array in which to check for nulls.
+	 * @return The indices of the given array which are null, sorted in ascending order, or null.
+	 */
+	protected List<Integer> missingIndices(Byte[] array)
+	{
+		if(array == null)
+			return null;
+		
+		List<Integer> nulls = new ArrayList<>();
+		for(int index = 0; index < array.length; index++)
+			nulls.add(index);
+		return nulls;
+	}
 }
