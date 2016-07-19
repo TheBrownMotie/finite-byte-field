@@ -1,7 +1,6 @@
 package com.nickww.finitefield;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -165,5 +164,31 @@ public class FiniteByteFieldMatrixTest
 	public void testHashCodeEquals()
 	{
 		EqualsVerifier.forClass(FiniteByteFieldMatrix.class).suppress(Warning.ALL_FIELDS_SHOULD_BE_USED).verify();
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBuildWithNegativeRowCount()
+	{
+		FiniteByteFieldMatrix.build(-1, 10, (i, j) -> (byte)1);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBuildWithNegativeColCount()
+	{
+		FiniteByteFieldMatrix.build(10, -1, (i, j) -> (byte)1);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testBuildWithNullFunction()
+	{
+		FiniteByteFieldMatrix.build(10, 10, null);
+	}
+	
+	@Test
+	public void testBuild()
+	{
+		FiniteByteFieldMatrix builtMatrix = FiniteByteFieldMatrix.build(3, 3, (i, j) -> (byte)(i * j));
+		FiniteByteFieldMatrix expectedMatrix = new FiniteByteFieldMatrix(new byte[][] {{0, 0, 0}, {0, 1, 2}, {0, 2, 4}});
+		assertEquals(builtMatrix, expectedMatrix);
 	}
 }

@@ -28,6 +28,31 @@ public final class FiniteByteFieldMatrix
 		return new FiniteByteFieldMatrix(identity);
 	}
 	
+	/**
+	 * Constructs a new matrix of the given size, where each element is provided by the given function. The function
+	 * will be given a row and column 0-based index, and the result will be the value of the given matrix at that row
+	 * and column. The given function will never be passed null values, and will only be passed values from 0
+	 * (inclusive) to the given row/column limit (exclusive).
+	 * 
+	 * @param numRows The number of rows for the returned matrix.
+	 * @param numCols The number of columns for the returned matrix.
+	 * @param matrixElementFunction The function to produce the elements of the returned matrix.
+	 * @return The constructed matrix of the appropriate size, with values returned from the given function.
+	 * @throws NullPointerException if the given function to produce elements is null.
+	 * @throws IllegalArgumentException if the given numRows or numCols values are less than 1.
+	 */
+	public static FiniteByteFieldMatrix build(int numRows, int numCols, ToByteBiFunction<Integer, Integer> element)
+	{
+		if(numRows < 1 || numCols < 1)
+			throw new IllegalArgumentException("The given bounds for the matrix must be greater than 0");
+		
+		byte[][] data = new byte[numRows][numCols];
+		for(int row = 0; row < numRows; row++)
+			for(int col = 0; col < numCols; col++)
+				data[row][col] = element.applyAsByte(row, col);
+		return new FiniteByteFieldMatrix(data);
+	}
+	
 	private final byte[][] data;
 	private final int rows;
 	private final int cols;
