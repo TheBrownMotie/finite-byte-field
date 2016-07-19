@@ -40,7 +40,8 @@ public abstract class ChecksumVector
 		
 		List<Integer> nulls = new ArrayList<>();
 		for(int index = 0; index < array.length; index++)
-			nulls.add(index);
+			if(array[index] == null)
+				nulls.add(index);
 		return nulls;
 	}
 }
