@@ -11,13 +11,8 @@ final class XorChecksumVector extends ChecksumVector
 			throw new IllegalArgumentException("Data array must have at least one element");
 		
 		byte[] checksummed = new byte[data.length + 1];
-		byte checksum = 0;
-		for(int i = 0; i < data.length; i++)
-		{
-			checksum = add(checksum, data[i]);
-			checksummed[i] = data[i];
-		}
-		checksummed[data.length] = checksum;
+		System.arraycopy(data, 0, checksummed, 0, data.length);
+		checksummed[checksummed.length-1] = add(data);
 		return checksummed;
 	}
 	
