@@ -59,9 +59,17 @@ public class FiniteByteFieldTest
 	}
 	
 	@Test
-	public void testAdd()
+	public void testAddBytes()
 	{
 		byte sum = add(fst, snd);
+		assertEquals(-4, sum);
+	}
+	
+	@Test
+	public void testAddArray()
+	{
+		byte[] bytes = new byte[] {fst, snd};
+		byte sum = add(bytes);
 		assertEquals(-4, sum);
 	}
 	

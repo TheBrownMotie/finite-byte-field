@@ -124,7 +124,7 @@ public class FiniteByteField
 	}
 	
 	/**
-	 * This adds two bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR.
+	 * This adds the given bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR.
 	 * 
 	 * @param a The augend
 	 * @param b The addend
@@ -133,6 +133,20 @@ public class FiniteByteField
 	public static byte add(byte a, byte... bytes)
 	{
 		byte sum = a;
+		for(byte bb : bytes)
+			sum ^= bb;
+		return sum;
+	}
+	
+	/**
+	 * This adds the given bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR.
+	 * 
+	 * @param bytes The bytes to add
+	 * @return The GF(2<sup>8</sup>) sum
+	 */
+	public static byte add(byte[] bytes)
+	{
+		byte sum = 0;
 		for(byte bb : bytes)
 			sum ^= bb;
 		return sum;
