@@ -135,6 +135,8 @@ public final class FiniteByteFieldMatrix
 	 */
 	public byte determinant()
 	{
+		if(!isSquare())
+			throw new IllegalStateException("Only a square matrix has a determinant");
 		if(determinant == null)
 			this.determinant = calculateDeterminant();
 		return determinant;
@@ -335,11 +337,12 @@ public final class FiniteByteFieldMatrix
 		return copy;
 	}
 	
+	/**
+	 * Calculates the determinant.<br/>
+	 * Precondition: matrix is square.
+	 */
 	private byte calculateDeterminant()
 	{
-		if(!isSquare())
-			throw new IllegalStateException("Only a square matrix has a determinant");
-		
 		int size = numRows();
 		if(size == 1)
 			return data[0][0];
