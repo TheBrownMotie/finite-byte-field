@@ -2,6 +2,8 @@ package com.nickww.finitefield;
 
 import static com.nickww.finitefield.FiniteByteField.*;
 
+import java.util.List;
+
 final class XorChecksumVector extends ChecksumVector
 {
 	@Override
@@ -12,7 +14,7 @@ final class XorChecksumVector extends ChecksumVector
 		
 		byte[] checksummed = new byte[data.length + 1];
 		System.arraycopy(data, 0, checksummed, 0, data.length);
-		checksummed[checksummed.length-1] = add(data);
+		checksummed[checksummed.length - 1] = add(data);
 		return checksummed;
 	}
 	
@@ -22,28 +24,15 @@ final class XorChecksumVector extends ChecksumVector
 		if(dataWithChecksums.length < 2)
 			throw new IllegalArgumentException("Array too small to include both data and checksums.");
 		
-		byte[] data = new byte[dataWithChecksums.length - 1];
-		byte checksum = 0;
-		int indexOfNull = -1;
-		for(int i = 0; i < dataWithChecksums.length; i++)
+		byte[] data = super.copy(dataWithChecksums, dataWithChecksums.length - 1);
+		List<Integer> nullIndices = super.missingIndices(dataWithChecksums);
+		if(!nullIndices.isEmpty() && nullIndices.get(0) != data.length)
 		{
-			if(dataWithChecksums[i] == null)
-			{
-				if(indexOfNull != -1)
-					throw new IllegalArgumentException("Too many nulls - can only handle 1");
-				indexOfNull = i;
-			}
+			if(nullIndices.size() > 1)
+				throw new IllegalArgumentException("Too many missing values - can only handle 1");
 			else
-			{
-				checksum = add(checksum, dataWithChecksums[i]);
-				if(i < data.length)
-					data[i] = dataWithChecksums[i];
-			}
+				data[nullIndices.get(0)] = add(dataWithChecksums[dataWithChecksums.length - 1], add(data));
 		}
-		
-		if(indexOfNull >= data.length)
-			return data;
-		data[indexOfNull] = checksum;
 		return data;
 	}
 }
