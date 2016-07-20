@@ -25,14 +25,13 @@ final class XorChecksumVector extends ChecksumVector
 			throw new IllegalArgumentException("Array too small to include both data and checksums.");
 		
 		byte[] data = super.copy(dataWithChecksums, dataWithChecksums.length - 1);
+		
 		List<Integer> nullIndices = super.missingIndices(dataWithChecksums);
+		if(nullIndices.size() > 1)
+			throw new IllegalArgumentException("Too many missing values - can only handle 1");
+		
 		if(!nullIndices.isEmpty() && nullIndices.get(0) != data.length)
-		{
-			if(nullIndices.size() > 1)
-				throw new IllegalArgumentException("Too many missing values - can only handle 1");
-			else
-				data[nullIndices.get(0)] = add(dataWithChecksums[dataWithChecksums.length - 1], add(data));
-		}
+			data[nullIndices.get(0)] = add(dataWithChecksums[dataWithChecksums.length - 1], add(data));
 		return data;
 	}
 }
