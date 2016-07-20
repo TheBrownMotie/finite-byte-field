@@ -6,6 +6,25 @@ import java.util.List;
 
 class DoubleChecksumVector extends ChecksumVector
 {
+	private static final byte[] powerOfTwo = new byte[MAX_VALUE + 1];
+	private static final byte[][] A = new byte[MAX_VALUE + 1][MAX_VALUE + 1];
+	private static final byte[][] B = new byte[MAX_VALUE + 1][MAX_VALUE + 1];
+	
+	static
+	{
+		powerOfTwo[0] = 1;
+		for(int i = 1; i <= MAX_VALUE; i++)
+			powerOfTwo[i] = dbl(powerOfTwo[i - 1]);
+		
+		for(int x = 0; x <= MAX_VALUE; x++)
+			for(int y = 0; y <= MAX_VALUE; y++)
+				A[x][y] = div(powerOfTwo[Math.abs(y - x)], add(powerOfTwo[Math.abs(y - x)], (byte) 1));
+			
+		for(int x = 0; x <= MAX_VALUE; x++)
+			for(int y = 0; y <= MAX_VALUE; y++)
+				B[x][y] = div(powerOfTwo[Math.min(x, y)], add(powerOfTwo[Math.abs(y - x)], (byte) 1));
+	}
+	
 	@Override
 	public byte[] withChecksums(byte[] data)
 	{
@@ -27,47 +46,36 @@ class DoubleChecksumVector extends ChecksumVector
 		if(dataWithChecksums.length < 3)
 			throw new IllegalArgumentException("Array too small to include both data and checksums.");
 		
-		byte[] data = super.copy(dataWithChecksums, dataWithChecksums.length-2);
-		
 		List<Integer> missingIndices = super.missingIndices(dataWithChecksums);
-		Byte p = dataWithChecksums[dataWithChecksums.length-2];
-		Byte q = dataWithChecksums[dataWithChecksums.length-1];
-		
-		if(missingIndices.isEmpty())
-		{
-			return data;
-		}
-		else if(missingIndices.size() == 1)
-		{
-			if(p == null || q == null)
-				return data;
-			else
-				data[missingIndices.get(0)] = add(p, data);
-		}
-		else if(missingIndices.size() == 2)
-		{
-			if(p == null && q == null)
-				return data;
-			else if(q == null)
-				data[missingIndices.get(0)] = add(p, data);
-			else if(p == null)
-				data[missingIndices.get(0)] = div(add(getQ(data), q), powerOfTwo(missingIndices.get(0)));
-			else
-			{
-				byte a = getA(missingIndices.get(0), missingIndices.get(1));
-				byte b = getB(missingIndices.get(0), missingIndices.get(1));
-				data[missingIndices.get(0)] = add(mul(a, add(p, data)), mul(b, add(getQ(data), q)));
-				data[missingIndices.get(1)] = add(p, add(data));
-			}
-		}
-		else
-		{
+		if(missingIndices.size() > 2)
 			throw new IllegalArgumentException("Too many missing values - can only handle 2");
-		}
 		
+		byte[] data = super.copy(dataWithChecksums, dataWithChecksums.length - 2);
+		if(missingIndices.isEmpty() || missingIndices.get(0) >= data.length)
+			return data;
+		
+		Byte p = dataWithChecksums[dataWithChecksums.length - 2];
+		Byte q = dataWithChecksums[dataWithChecksums.length - 1];
+		int x = missingIndices.get(0);
+		
+		if(missingIndices.size() == 1 || q == null)
+			return withValue(data, x, add(p, data));
+		if(p == null)
+			return withValue(data, x, div(add(getQ(data), q), powerOfTwo[x]));
+		
+		int y = missingIndices.get(1);
+		data[x] = add(mul(A[x][y], add(p, data)), mul(B[x][y], add(getQ(data), q)));
+		data[y] = add(p, add(data));
 		return data;
 	}
 	
+	/**
+	 * Calculates the value of the Reed-Solomon double parity byte from the given data. This is the sum of each byte
+	 * multiplied by 2<sup>index</sup>. For example, the bytes (1, 24, 54) would produce the parity
+	 * <code>2<sup>0</sup>*1 + 2<sup>1</sup>*23 + 2<sup>2</sup>*54 = 1*1 + 2*23 + 4*54</code>.<br/>
+	 * <br/>
+	 * Precondition: input parameter is not null
+	 */
 	private static byte getQ(byte[] data)
 	{
 		byte q = 0;
@@ -76,23 +84,15 @@ class DoubleChecksumVector extends ChecksumVector
 		return q;
 	}
 	
-	private static byte powerOfTwo(int exponent)
+	/**
+	 * Returns the given array, with the given value placed in the given index. This is just for the convenience of
+	 * setting a value and returning the array in one line.<br/>
+	 * <br/>
+	 * Precondition: array is not null, index is a valid position in the array.
+	 */
+	private byte[] withValue(byte[] array, int index, byte value)
 	{
-		byte result = 1;
-		for(int i = 0; i < exponent; i++)
-			result = dbl(result);
-		return result;
-	}
-	
-	private static byte getA(int x, int y)
-	{
-		byte value = powerOfTwo(Math.abs(y - x));
-		return div(value, add(value, (byte) 1));
-	}
-	
-	private static byte getB(int x, int y)
-	{
-		byte value = powerOfTwo(Math.abs(y - x));
-		return div(powerOfTwo(x), add(value, (byte) 1));
+		array[index] = value;
+		return array;
 	}
 }
