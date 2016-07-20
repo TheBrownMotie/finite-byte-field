@@ -239,4 +239,45 @@ public class FiniteByteFieldMatrixTest
 		assertEquals(1, matrix.numRows());
 		assertEquals(4, matrix.numCols());
 	}
+	
+	@Test
+	public void testGetData()
+	{
+		byte[][] originalData = new byte[][] {{10, 20}, {30, 40}};
+		byte[][] data = new byte[][] {{10, 20}, {30, 40}};
+		FiniteByteFieldMatrix matrix = new FiniteByteFieldMatrix(data);
+		
+		// check immutability:
+		matrix.getData()[0][0] = 2;
+		assertArrayEquals(originalData, data);
+		assertArrayEquals(data, matrix.getData());
+	}
+	
+	@Test
+	public void testGetRow()
+	{
+		byte[][] originalData = new byte[][] {{10, 20}, {30, 40}};
+		byte[][] data = new byte[][] {{10, 20}, {30, 40}};
+		FiniteByteFieldMatrix matrix = new FiniteByteFieldMatrix(data);
+		
+		// check immutability:
+		matrix.getRow(0)[0] = 2;
+		assertArrayEquals(originalData[0], data[0]);
+		assertArrayEquals(data[0], matrix.getRow(0));
+	}
+	
+	@Test
+	public void testGetCol()
+	{
+		byte[][] originalData = new byte[][] {{10, 20}, {30, 40}};
+		byte[][] data = new byte[][] {{10, 20}, {30, 40}};
+		FiniteByteFieldMatrix matrix = new FiniteByteFieldMatrix(data);
+		
+		// check immutability:
+		matrix.getCol(0)[0] = 2;
+		assertEquals(originalData[0][0], data[0][0]);
+		assertEquals(originalData[1][0], data[1][0]);
+		assertEquals(data[0][0], matrix.getCol(0)[0]);
+		assertEquals(data[1][0], matrix.getCol(0)[1]);
+	}
 }

@@ -310,6 +310,21 @@ public final class FiniteByteFieldMatrix
 		return numRows() == numCols();
 	}
 	
+	public byte[][] getData()
+	{
+		return copy(data);
+	}
+	
+	public byte[] getRow(int row)
+	{
+		return copy(data[row]);
+	}
+	
+	public byte[] getCol(int col)
+	{
+		return transpose().getRow(col);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -355,6 +370,13 @@ public final class FiniteByteFieldMatrix
 		for(int row = 0; row < data.length; row++)
 			for(int col = 0; col < data[0].length; col++)
 				copy[row][col] = data[row][col];
+		return copy;
+	}
+	
+	private byte[] copy(byte[] data)
+	{
+		byte[] copy = new byte[data.length];
+		System.arraycopy(data, 0, copy, 0, data.length);
 		return copy;
 	}
 	
