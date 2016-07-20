@@ -33,11 +33,7 @@ class DoubleChecksumVector extends ChecksumVector
 		Byte p = dataWithChecksums[dataWithChecksums.length-2];
 		Byte q = dataWithChecksums[dataWithChecksums.length-1];
 		
-		if(missingIndices.size() > 2)
-		{
-			throw new IllegalArgumentException("Too many missing values - can only handle 2");
-		}
-		else if(missingIndices.isEmpty())
+		if(missingIndices.isEmpty())
 		{
 			return data;
 		}
@@ -63,6 +59,10 @@ class DoubleChecksumVector extends ChecksumVector
 				data[missingIndices.get(0)] = add(mul(a, add(p, data)), mul(b, add(getQ(data), q)));
 				data[missingIndices.get(1)] = add(p, add(data));
 			}
+		}
+		else
+		{
+			throw new IllegalArgumentException("Too many missing values - can only handle 2");
 		}
 		
 		return data;

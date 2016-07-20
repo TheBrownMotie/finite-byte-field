@@ -59,6 +59,20 @@ public class DoubleChecksumVectorTest
 		Byte[] data = new Byte[] { 45, null, null, null };
 		new DoubleChecksumVector().solveMissingValues(data);
 	}
+
+	@Test
+	public void testSolveNoMissingValues()
+	{
+		byte[] data = new byte[] { 45, -123, 10 };
+		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
+		
+		Byte[] missingData = new Byte[dataWithChecksums.length];
+		for(int i = 0; i < dataWithChecksums.length; i++)
+			missingData[i] = dataWithChecksums[i];
+		
+		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
+		assertArrayEquals(data, originalData);
+	}
 	
 	@Test
 	public void testSolveTwoMissingDataValues()
