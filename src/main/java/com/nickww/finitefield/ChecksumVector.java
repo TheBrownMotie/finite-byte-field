@@ -44,4 +44,28 @@ public abstract class ChecksumVector
 				nulls.add(index);
 		return nulls;
 	}
+	
+	/**
+	 * Returns a primitive copy of the given byte-object array. The number of elements copied can be limited by a given
+	 * parameter. Any values in the given array which are null will be copied as '0'.
+	 * 
+	 * @param array The array to copy from.
+	 * @param length The maximum number of elements to copy. If this value is greater than the length of the given
+	 * array, the returned array will be the same size as the given array.
+	 * @return The primitive copy of the given array, with 0s in place of nulls.
+	 * @throws IllegalArgumentException if the length limit is negative.
+	 */
+	protected byte[] copy(Byte[] array, int length)
+	{
+		if(length < 0)
+			throw new IllegalArgumentException("Length of desired copy cannot be null");
+		if(array == null)
+			return null;
+		
+		byte[] copy = new byte[Math.min(array.length, length)];
+		for(int i = 0; i < copy.length; i++)
+			if(array[i] != null)
+				copy[i] = array[i];
+		return copy;
+	}
 }
