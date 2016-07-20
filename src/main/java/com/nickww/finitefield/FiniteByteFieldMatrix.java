@@ -53,6 +53,32 @@ public final class FiniteByteFieldMatrix
 		return new FiniteByteFieldMatrix(data);
 	}
 	
+	/**
+	 * Constructs a new matrix consisting of only one column, such that each element of the given array is each element
+	 * of the column, in order.
+	 * 
+	 * @param bytes The data with which to make a single-column matrix.
+	 * @return The new matrix with the given data.
+	 */
+	public static FiniteByteFieldMatrix columnVector(byte[] bytes)
+	{
+		byte[][] column = new byte[bytes.length][1];
+		for(int row = 0; row < bytes.length; row++)
+			column[row][0] = bytes[row];
+		return new FiniteByteFieldMatrix(column);
+	}
+	
+	/**
+	 * Constructs a new matrix consisting of only one row using the given byte array.
+	 * 
+	 * @param bytes The single row of data to exist in the new matrix.
+	 * @return The new matrix with the given data.
+	 */
+	public static FiniteByteFieldMatrix rowVector(byte[] bytes)
+	{
+		return new FiniteByteFieldMatrix(new byte[][] { bytes });
+	}
+	
 	private final byte[][] data;
 	private final int rows;
 	private final int cols;
@@ -80,7 +106,7 @@ public final class FiniteByteFieldMatrix
 		for(int i = 1; i < rows; i++)
 			if(data[i].length != cols)
 				throw new IllegalArgumentException("All rows in array must be the same length");
-		
+			
 		this.data = copy(data);
 	}
 	

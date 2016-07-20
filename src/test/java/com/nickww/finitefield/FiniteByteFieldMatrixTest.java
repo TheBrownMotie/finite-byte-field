@@ -195,4 +195,48 @@ public class FiniteByteFieldMatrixTest
 		FiniteByteFieldMatrix expectedMatrix = new FiniteByteFieldMatrix(new byte[][] {{0, 0, 0}, {0, 1, 2}, {0, 2, 4}});
 		assertEquals(builtMatrix, expectedMatrix);
 	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testColumnVectorNullArray()
+	{
+		FiniteByteFieldMatrix.columnVector(null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testColumnVectorEmptyArray()
+	{
+		FiniteByteFieldMatrix matrix = FiniteByteFieldMatrix.columnVector(new byte[0]);
+		assertEquals(0, matrix.numRows());
+		assertEquals(0, matrix.numCols());
+	}
+	
+	@Test
+	public void testColumnVector()
+	{
+		FiniteByteFieldMatrix matrix = FiniteByteFieldMatrix.columnVector(new byte[] {10, 20, 30, -10});
+		assertEquals(4, matrix.numRows());
+		assertEquals(1, matrix.numCols());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testRowVectorNullArray()
+	{
+		FiniteByteFieldMatrix.rowVector(null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRowVectorEmptyArray()
+	{
+		FiniteByteFieldMatrix matrix = FiniteByteFieldMatrix.rowVector(new byte[0]);
+		assertEquals(0, matrix.numRows());
+		assertEquals(0, matrix.numCols());
+	}
+	
+	@Test
+	public void testRowVector()
+	{
+		FiniteByteFieldMatrix matrix = FiniteByteFieldMatrix.rowVector(new byte[] {10, 20, 30, -10});
+		assertEquals(1, matrix.numRows());
+		assertEquals(4, matrix.numCols());
+	}
 }
