@@ -160,6 +160,12 @@ public class FiniteByteFieldMatrixTest
 		assertEquals(FiniteByteFieldMatrix.identity(3), square.inverse().times(square));
 	}
 	
+	@Test(expected=IllegalStateException.class)
+	public void testInverseRectangularMatrix()
+	{
+		matrix.inverse();
+	}
+	
 	@Test
 	public void testHashCodeEquals()
 	{
