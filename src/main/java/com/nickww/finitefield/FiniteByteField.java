@@ -40,6 +40,8 @@ public class FiniteByteField
 			sqrt[sqr[i] & 0xff] = (byte) i;
 	}
 	
+	private FiniteByteField() { /* Prevent instantiation */ }
+	
 	/**
 	 * Returns the given number raised to the power of 2.
 	 * 
