@@ -11,6 +11,8 @@ import org.junit.Test;
  */
 public class DoubleChecksumVectorTest
 {
+	private static final byte[] data = { 45, -123, 10 };
+	
 	@Test(expected = NullPointerException.class)
 	public void testWithChecksumsNullParameter()
 	{
@@ -63,13 +65,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveNoMissingValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -77,15 +74,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveTwoMissingDataValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[0] = null;
-		missingData[1] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, 0, 1);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -93,15 +83,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveMissingDataAndPValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[0] = null;
-		missingData[data.length] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, 0, data.length);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -109,15 +92,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveMissingDataAndQValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[0] = null;
-		missingData[data.length + 1] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, 0, data.length + 1);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -125,15 +101,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveMissingChecksumValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[data.length] = null;
-		missingData[data.length + 1] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, data.length, data.length + 1);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -141,14 +110,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveOneMissingDataValues()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[0] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, 0);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -156,14 +119,8 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveOneMissingPValue()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[data.length] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, data.length);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
 	}
@@ -171,15 +128,19 @@ public class DoubleChecksumVectorTest
 	@Test
 	public void testSolveOneMissingQValue()
 	{
-		byte[] data = new byte[] { 45, -123, 10 };
 		byte[] dataWithChecksums = new DoubleChecksumVector().withChecksums(data);
-		
-		Byte[] missingData = new Byte[dataWithChecksums.length];
-		for(int i = 0; i < dataWithChecksums.length; i++)
-			missingData[i] = dataWithChecksums[i];
-		missingData[data.length + 1] = null;
-		
+		Byte[] missingData = copyWithSomeMissing(dataWithChecksums, data.length + 1);
 		byte[] originalData = new DoubleChecksumVector().solveMissingValues(missingData);
 		assertArrayEquals(data, originalData);
+	}
+	
+	private Byte[] copyWithSomeMissing(byte[] array, int... indicesToNull)
+	{
+		Byte[] missingData = new Byte[array.length];
+		for(int i = 0; i < array.length; i++)
+			missingData[i] = array[i];
+		for(int i = 0; i < indicesToNull.length; i++)
+			missingData[indicesToNull[i]] = null;
+		return missingData;
 	}
 }
