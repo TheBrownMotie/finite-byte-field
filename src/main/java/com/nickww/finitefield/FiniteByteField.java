@@ -100,8 +100,8 @@ public class FiniteByteField
 		if(a == 0 || b == 0)
 			return 0;
 		int t = (log[a & 0xff] & 0xff) + (log[b & 0xff] & 0xff);
-		if(t > 255)
-			t -= 255;
+		if(t > MAX_VALUE)
+			t -= MAX_VALUE;
 		return exp[t & 0xff];
 	}
 	
@@ -121,7 +121,7 @@ public class FiniteByteField
 			return 0;
 		int t = (log[a & 0xff] & 0xff) - (log[b & 0xff] & 0xff);
 		if(t < 0)
-			t += 255;
+			t += MAX_VALUE;
 		return exp[t & 0xff];
 	}
 	
