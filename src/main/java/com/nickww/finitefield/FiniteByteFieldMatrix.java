@@ -2,6 +2,7 @@ package com.nickww.finitefield;
 
 import static com.nickww.finitefield.FiniteByteField.*;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * This class represents a 2d matrix of bytes, which exist in the finite field GF(2<sup>8</sup>). Instances of this
@@ -278,6 +279,74 @@ public final class FiniteByteFieldMatrix
 	public FiniteByteFieldMatrix solve(FiniteByteFieldMatrix product)
 	{
 		return this.inverse().times(product);
+	}
+	
+	/**
+	 * Constructs a new matrix beginning with the rows of this matrix, followed by the rows of the given matrix. The
+	 * number columns of the given matrix must match the number of columns in this matrix.
+	 * 
+	 * @param matrix The matrix to append to the rows of this matrix.
+	 * @return A new matrix, which consists of the rows of both matrices, in order.
+	 * @throws NullPointerException if the given matrix is null.
+	 * @throws IllegalArgumentException if the number of columns of the two matrices don't match.
+	 */
+	public FiniteByteFieldMatrix appendRows(FiniteByteFieldMatrix matrix)
+	{
+		if(this.numCols() != matrix.numCols())
+			throw new IllegalArgumentException("To append another matrix, the number of columns must match");
+		
+		byte[][] result = new byte[this.numRows() + matrix.numRows()][this.numCols()];
+		for(int row = 0; row < this.numRows(); row++)
+			result[row] = copy(this.data[row]);
+		for(int row = 0; row < matrix.numRows(); row++)
+			result[this.numRows() + row] = copy(matrix.data[row]);
+		
+		return new FiniteByteFieldMatrix(result);
+	}
+	
+	/**
+	 * Returns a new matrix which contains rows of this matrix, in relative order, without the rows specified in the
+	 * parameter.
+	 * 
+	 * @param rowsToRemove The rows of this matrix to not include in the returned matrix.
+	 * @return A new sub-matrix of this matrix.
+	 * @throws NullPointerException if the parameter is null, or contains any null values.
+	 * @throws IndexOutOfBoundsException if any of the given indices are out of the bounds of this matrix.
+	 * @throws IllegalStateException if the returned array would be completely empty.
+	 * @see #withoutRows(Collection)
+	 */
+	public FiniteByteFieldMatrix withoutRows(Integer... rowsToRemove)
+	{
+		return withoutRows(Arrays.asList(rowsToRemove));
+	}
+	
+	/**
+	 * Returns a new matrix which contains rows of this matrix, in relative order, without the rows specified in the
+	 * parameter.
+	 * 
+	 * @param rowsToRemove The rows of this matrix to not include in the returned matrix.
+	 * @return A new sub-matrix of this matrix.
+	 * @throws NullPointerException if the parameter is null, or contains any null values.
+	 * @throws IndexOutOfBoundsException if any of the given indices are out of the bounds of this matrix.
+	 * @throws IllegalStateException if the returned array would be completely empty.
+	 * @see #withoutRows(int...)
+	 */
+	public FiniteByteFieldMatrix withoutRows(Collection<Integer> rowsToRemove)
+	{
+		if(rowsToRemove.size() == 0)
+			return this;
+		if(rowsToRemove.contains(null))
+			throw new NullPointerException("Cannot remove a null index from the matrix");
+		if(rowsToRemove.size() >= numRows())
+			throw new IllegalStateException("Both dimensions of matrix must be non-zero");
+		
+		byte[][] dataWithoutRows = new byte[numRows() - rowsToRemove.size()][numCols()];
+		int dataWithoutRowsIndex = 0;
+		for(int row = 0; row < numRows(); row++)
+			if(!rowsToRemove.contains(row))
+				dataWithoutRows[dataWithoutRowsIndex++] = copy(data[row]);
+		
+		return new FiniteByteFieldMatrix(dataWithoutRows);
 	}
 	
 	/**
