@@ -5,6 +5,22 @@ import java.util.List;
 
 public abstract class ChecksumVector
 {
+	private static final XorChecksumVector xor = new XorChecksumVector();
+	private static final DoubleChecksumVector raid6 = new DoubleChecksumVector();
+	private static final MatrixChecksumVector[] general = new MatrixChecksumVector[FiniteByteField.MAX_VALUE];
+	
+	public static ChecksumVector build(int numChecksums)
+	{
+		if(numChecksums == 1)
+			return xor;
+		if(numChecksums == 2)
+			return raid6;
+		
+		if(general[numChecksums] == null)
+			general[numChecksums] = new MatrixChecksumVector(numChecksums);
+		return general[numChecksums];
+	}
+	
 	/**
 	 * Calculates checksums for the given data, and returns a vector which is the given data bytes followed by the
 	 * checksum bytes.
