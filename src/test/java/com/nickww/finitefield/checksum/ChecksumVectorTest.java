@@ -1,4 +1,4 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.nickww.finitefield.checksum.ChecksumVector;
 
 public class ChecksumVectorTest
 {

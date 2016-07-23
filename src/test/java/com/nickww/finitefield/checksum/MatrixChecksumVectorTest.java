@@ -1,4 +1,4 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.nickww.finitefield.checksum.MatrixChecksumVector;
 
 @RunWith(Parameterized.class)
 public class MatrixChecksumVectorTest

@@ -1,4 +1,4 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import static com.nickww.finitefield.FiniteByteField.*;
 

@@ -1,7 +1,9 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import com.nickww.finitefield.checksum.DoubleChecksumVector;
 
 /**
  * Implementation of {@link https://www.kernel.org/pub/linux/kernel/people/hpa/raid6.pdf}

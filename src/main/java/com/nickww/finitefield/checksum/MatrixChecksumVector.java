@@ -1,8 +1,10 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import static com.nickww.finitefield.FiniteByteField.*;
 
 import java.util.List;
+
+import com.nickww.finitefield.FiniteByteFieldMatrix;
 
 /**
  * Creates 3+ checksums for data, using the general principles outlined in

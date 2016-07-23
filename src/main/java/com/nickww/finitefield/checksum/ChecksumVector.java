@@ -1,7 +1,9 @@
-package com.nickww.finitefield;
+package com.nickww.finitefield.checksum;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.nickww.finitefield.FiniteByteField;
 
 public abstract class ChecksumVector
 {
