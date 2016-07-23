@@ -11,6 +11,8 @@ public abstract class ChecksumVector
 	
 	public static ChecksumVector build(int numChecksums)
 	{
+		if(numChecksums <= 0)
+			throw new IllegalArgumentException("Cannot create a checksum vector for 0 or fewer checksums");
 		if(numChecksums == 1)
 			return xor;
 		if(numChecksums == 2)
