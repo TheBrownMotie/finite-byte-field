@@ -215,17 +215,19 @@ public class FiniteByteField
 	 */
 	private static byte slowMul(byte a, byte b)
 	{
+		byte counter = a;
+		byte value = b;
 		byte r = 0;
 		byte t;
-		while(a != 0)
+		while(counter != 0)
 		{
-			if((a & 1) != 0) // if a is odd
-				r = (byte) (r ^ b); // add value of b to the result
-			t = (byte) (b & 0x80);
-			b = (byte) (b << 1); // double b
+			if((counter & 1) != 0) // if a is odd
+				r = (byte) (r ^ value); // add value of b to the result
+			t = (byte) (value & 0x80);
+			value = (byte) (value << 1); // double b
 			if(t != 0)
-				b = (byte) (b ^ 0x1b); // add polynomial representation to b
-			a = (byte) ((a & 0xff) >> 1); // divide a in half ( "& 0xff >>" equivalent to ">>>" for unsigned byte)
+				value = (byte) (value ^ 0x1b); // add polynomial representation to b
+			counter = (byte) ((counter & 0xff) >> 1); // divide a in half ( "& 0xff >>" equivalent to ">>>" for unsigned byte)
 		}
 		return r;
 	}
