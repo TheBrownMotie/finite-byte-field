@@ -13,7 +13,7 @@ public class FiniteByteFieldTest
 	@Test
 	public void testMaxValue()
 	{
-		assertEquals((int)Math.pow(2, 8) - 1, FiniteByteField.MAX_VALUE);
+		assertEquals((int)Math.pow(2, 8) - 1, MAX_VALUE);
 	}
 	
 	@Test
