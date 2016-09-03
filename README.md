@@ -35,6 +35,8 @@ byte c = -56; // 200
 ## Basic arithmetic
 
 ```Java
+import static com.nickww.finitefield.FiniteByteField.*;
+
 // Addition is the same as XOR:
 add(a, b, c); // 71
 add(new byte[] {a, b, c});
