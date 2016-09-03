@@ -31,6 +31,14 @@ public class FiniteByteFieldTest
 	}
 	
 	@Test
+	public void testMulVarArgs()
+	{
+		byte trd = -10;
+		byte product = mul(fst, snd, trd);
+		assertEquals(58, product);
+	}
+	
+	@Test
 	public void testDiv()
 	{
 		byte result = div(fst, snd);
@@ -80,6 +88,15 @@ public class FiniteByteFieldTest
 		byte snd = 3;
 		byte result = pow(fst, snd);
 		assertEquals(8, result);
+	}
+	
+	@Test
+	public void testPowLargeNumbers()
+	{
+		byte fst = 112;
+		byte snd = -56;
+		byte result = pow(fst, snd);
+		assertEquals(37, result);
 	}
 	
 	@Test

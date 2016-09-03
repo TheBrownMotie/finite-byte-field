@@ -106,6 +106,23 @@ public class FiniteByteField
 	}
 	
 	/**
+	 * This multiplies the given bytes, as if they were unsigned, using GF(2<sup>8</sup>) by repeatedly calling
+	 * {@link #mul(byte, byte)}.
+	 * 
+	 * @param a The first byte to be included in the product.
+	 * @param bytes The remaining bytes to be included in the product.
+	 * @return The resulting of calling {@link #mul(byte, byte)} on the given bytes.
+	 * @see #mul(byte, byte)
+	 */
+	public static byte mul(byte a, byte... bytes)
+	{
+		byte product = a;
+		for(byte c : bytes)
+			product = mul(product, c);
+		return product;
+	}
+	
+	/**
 	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
 	 * logarithms: <code>
 	 * product = ilog( log(dividend) - log(divisor) )
@@ -179,7 +196,7 @@ public class FiniteByteField
 		if(e == 0)
 			return 1;
 		byte product = i;
-		for(int count = 1; count < e; count++)
+		for(int count = 1; count < (e & 0xff); count++)
 			product = mul(product, i);
 		return (byte) product;
 	}
