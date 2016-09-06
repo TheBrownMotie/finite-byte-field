@@ -3,7 +3,7 @@ package com.nickww.finitefield;
 /**
  * A class to perform finite field arithmetic for Galois fields of order 2<sup>8</sup>. The implementation of this class
  * works by treating Java's byte as an unsigned byte, where the positive numbers are 0-127 and the negative numbers are
- * 128-255. Credit to {@link http://www.cs.utsa.edu/~wagner/laws/FFM.html} for providing the logic and pseudocode of
+ * 128-255. Credit to http://www.cs.utsa.edu/~wagner/laws/FFM.html for providing the logic and pseudocode of
  * this class.
  * 
  * @author Nick Wuensch
@@ -64,7 +64,7 @@ public class FiniteByteField
 	 * a<sup>1/2</sup> = a<sup>2<sup>m</sup>/2</sup>
 	 * a<sup>1/2</sup> = a<sup>2<sup>m-1</sup></sup>
 	 * In GF(2<sup>8</sup>),
-	 * sqrt(a) = a<sup>128
+	 * sqrt(a) = a<sup>128</sup>
 	 * </code></pre>
 	 * 
 	 * @param a The base
@@ -146,7 +146,7 @@ public class FiniteByteField
 	 * This adds the given bytes, which in GF(2<sup>8</sup>) is simply the same as applying XOR.
 	 * 
 	 * @param a The augend
-	 * @param b The addend
+	 * @param bytes Many addends
 	 * @return The GF(2<sup>8</sup>) sum
 	 */
 	public static byte add(byte a, byte... bytes)
@@ -176,7 +176,7 @@ public class FiniteByteField
 	 * same as addition.
 	 * 
 	 * @param a The minuend
-	 * @param b The subtrahend
+	 * @param bytes Many subtrahends
 	 * @return The GF(2<sup>8</sup>) difference
 	 */
 	public static byte sub(byte a, byte... bytes)
@@ -207,7 +207,7 @@ public class FiniteByteField
 	 * @param vector1 The first byte array
 	 * @param vector2 The second byte array
 	 * @return The dot product, arrived at with addition and multiplication in GF(2<sup>8</sup>)
-	 * @throws IllegalArgumentExecption if the vectors are not the same length
+	 * @throws IllegalArgumentException if the vectors are not the same length
 	 */
 	public static byte dot(byte[] vector1, byte[] vector2)
 	{

@@ -37,7 +37,7 @@ public final class FiniteByteFieldMatrix
 	 * 
 	 * @param numRows The number of rows for the returned matrix.
 	 * @param numCols The number of columns for the returned matrix.
-	 * @param matrixElementFunction The function to produce the elements of the returned matrix.
+	 * @param element The function to produce the elements of the returned matrix.
 	 * @return The constructed matrix of the appropriate size, with values returned from the given function.
 	 * @throws NullPointerException if the given function to produce elements is null.
 	 * @throws IllegalArgumentException if the given numRows or numCols values are less than 1.
@@ -179,7 +179,7 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * Returns the cofactor of this matrix, which is a new matrix of the same size such that each element
-	 * <code>i, j</code> in the new matrix is the determinant of the {@link #minor(i, j)} of the original matrix.
+	 * <code>i, j</code> in the new matrix is the determinant of the {@link #minor(int, int)} of the original matrix.
 	 * 
 	 * @return The cofactor of this matrix.
 	 */
@@ -206,8 +206,8 @@ public final class FiniteByteFieldMatrix
 	 * Returns a new matrix, arrived at through the process of matrix multiplication. Matrix multiplication constructs a
 	 * new matrix, where each element at position <code>i, j</code> is arrived by the dot product of the first matrix's
 	 * row <code>i</code> and the second matrix's column <code>j</code>. Unlike typical arithmetic, order matters - the
-	 * number of rows of the second matrix must match the number of columns of the first matrix. <br/>
-	 * <br/>
+	 * number of rows of the second matrix must match the number of columns of the first matrix. <br>
+	 * <br>
 	 * Illustration:
 	 * 
 	 * <pre>
@@ -215,7 +215,7 @@ public final class FiniteByteFieldMatrix
 	 *           [3 4]
 	 *              |
 	 *              v
-	 *   [1, 2]--[->x]   // x = [1, 2] -dot- [2, 4]
+	 *   [1, 2]--[-&gt;x]   // x = [1, 2] -dot- [2, 4]
 	 *   [3, 4]  [   ]
 	 *   [5, 6]  [   ]
 	 * </pre>
@@ -267,8 +267,8 @@ public final class FiniteByteFieldMatrix
 	
 	/**
 	 * "Divides" the given matrix with this matrix, such that if this matrix were multiplied with the result, the
-	 * product would be the given matrix.<br/>
-	 * <br/>
+	 * product would be the given matrix.<br>
+	 * <br>
 	 * In other words, this method provides a value for <code>x</code> which would satisfy the line:
 	 * <code>product = this.times(x)</code>
 	 * 
@@ -329,7 +329,7 @@ public final class FiniteByteFieldMatrix
 	 * @throws NullPointerException if the parameter is null, or contains any null values.
 	 * @throws IndexOutOfBoundsException if any of the given indices are out of the bounds of this matrix.
 	 * @throws IllegalStateException if the returned array would be completely empty.
-	 * @see #withoutRows(int...)
+	 * @see #withoutRows(Integer...)
 	 */
 	public FiniteByteFieldMatrix withoutRows(Collection<Integer> rowsToRemove)
 	{
