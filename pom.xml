@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nickww</groupId>
   <artifactId>finite-byte-field</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Finite Byte Field</name>
   <description>Implementation of finite field arithmetic for Java, specifically Galois Field 256.</description>
   <developers>
