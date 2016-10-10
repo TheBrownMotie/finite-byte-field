@@ -50,7 +50,7 @@ mul(a, b, c); // 13
 dbl(a);       // -32 (224) - same as multiplying by two, but much faster
 
 // Division:
-FiniteByteField.div(a, b); // 55
+div(a, b); // 55
 
 // Exponentiation:
 pow(a, c); // 37
