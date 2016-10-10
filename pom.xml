@@ -5,6 +5,7 @@
   <version>1.0.0</version>
   <name>Finite Byte Field</name>
   <description>Implementation of finite field arithmetic for Java, specifically Galois Field 256.</description>
+  <url>https://github.com/TheBrownMotie/finite-byte-field</url>
   
   <developers>
     <developer>
@@ -96,6 +97,8 @@
   
   <scm>
     <url>https://github.com/TheBrownMotie/finite-byte-field</url>
+    <connection>scm:git:https://github.com/TheBrownMotie/finite-byte-field</connection>
+    <developerConnection>scm:git:https://github.com/TheBrownMotie/finite-byte-field</developerConnection>
   </scm>
   
   <distributionManagement>
