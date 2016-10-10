@@ -14,6 +14,8 @@ public class FiniteByteField
 	
 	private static final byte[] exp = new byte[MAX_VALUE + 1];
 	private static final byte[] log = new byte[MAX_VALUE + 1];
+	private static final byte[][] mul = new byte[MAX_VALUE + 1][MAX_VALUE + 1];
+	private static final byte[][] div = new byte[MAX_VALUE + 1][MAX_VALUE + 1];
 	private static final byte[] sqr = new byte[MAX_VALUE + 1];
 	private static final byte[] sqrt = new byte[MAX_VALUE + 1];
 	
@@ -33,9 +35,18 @@ public class FiniteByteField
 		for(int i = 0; i <= MAX_VALUE; i++)
 			log[exp[i] & 0xff] = (byte) i;
 		
-		// #mul should now work
+		for(int i = 0; i <= MAX_VALUE; i++)
+		{
+			for(int j = 0; j <= MAX_VALUE; j++)
+			{
+				mul[i][j] = fastMul((byte)(i & 0xff), (byte)(j & 0xff));
+				div[i][j] = fastDiv((byte)(i & 0xff), (byte)(j & 0xff));
+			}
+		}
+		
 		for(int i = 0; i <= MAX_VALUE; i++)
 			sqr[i] = mul((byte)(i & 0xff), (byte)(i & 0xff));
+		
 		for(int i = 0; i <= MAX_VALUE; i++)
 			sqrt[sqr[i] & 0xff] = (byte) i;
 	}
@@ -86,10 +97,7 @@ public class FiniteByteField
 	}
 	
 	/**
-	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
-	 * logarithms: <code>
-	 * product = ilog( log(multiplier) + log(multiplicand) )
-	 * </code>
+	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>).
 	 * 
 	 * @param a The multiplier
 	 * @param b The multiplicand
@@ -97,12 +105,7 @@ public class FiniteByteField
 	 */
 	public static byte mul(byte a, byte b)
 	{
-		if(a == 0 || b == 0)
-			return 0;
-		int t = (log[a & 0xff] & 0xff) + (log[b & 0xff] & 0xff);
-		if(t > MAX_VALUE)
-			t -= MAX_VALUE;
-		return exp[t & 0xff];
+		return mul[a & 0xff][b & 0xff];
 	}
 	
 	/**
@@ -122,24 +125,9 @@ public class FiniteByteField
 		return product;
 	}
 	
-	/**
-	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
-	 * logarithms: <code>
-	 * product = ilog( log(dividend) - log(divisor) )
-	 * </code>
-	 * 
-	 * @param a The dividend
-	 * @param b The divisor
-	 * @return The GF(2<sup>8</sup>) quotient
-	 */
 	public static byte div(byte a, byte b)
 	{
-		if(a == 0 || b == 0)
-			return 0;
-		int t = (log[a & 0xff] & 0xff) - (log[b & 0xff] & 0xff);
-		if(t < 0)
-			t += MAX_VALUE;
-		return exp[t & 0xff];
+		return div[a & 0xff][b & 0xff];
 	}
 	
 	/**
@@ -247,5 +235,45 @@ public class FiniteByteField
 			counter = (byte) ((counter & 0xff) >> 1); // divide a in half ( "& 0xff >>" equivalent to ">>>" for unsigned byte)
 		}
 		return r;
+	}
+	
+	/**
+	 * This multiplies the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
+	 * logarithms: <code>
+	 * product = ilog( log(multiplier) + log(multiplicand) )
+	 * </code>
+	 * 
+	 * @param a The multiplier
+	 * @param b The multiplicand
+	 * @return The GF(2<sup>8</sup>) product
+	 */
+	private static byte fastMul(byte a, byte b)
+	{
+		if(a == 0 || b == 0)
+			return 0;
+		int t = (log[a & 0xff] & 0xff) + (log[b & 0xff] & 0xff);
+		if(t > MAX_VALUE)
+			t -= MAX_VALUE;
+		return exp[t & 0xff];
+	}
+	
+	/**
+	 * This divides the two bytes, as if they were unsigned, using GF(2<sup>8</sup>) logarithms and inverse
+	 * logarithms: <code>
+	 * product = ilog( log(dividend) - log(divisor) )
+	 * </code>
+	 * 
+	 * @param a The dividend
+	 * @param b The divisor
+	 * @return The GF(2<sup>8</sup>) quotient
+	 */
+	private static byte fastDiv(byte a, byte b)
+	{
+		if(a == 0 || b == 0)
+			return 0;
+		int t = (log[a & 0xff] & 0xff) - (log[b & 0xff] & 0xff);
+		if(t < 0)
+			t += MAX_VALUE;
+		return exp[t & 0xff];
 	}
 }
